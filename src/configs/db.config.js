@@ -48,10 +48,8 @@ const connectCallback = function (err, data) {
     const { name, host, port, models } = data.connections[0];
 
     logger.info("database server: successful...🍃");
-    logger.info(`database server: host: ${chalk.magenta(host)}`);
-    logger.info(`database server: port: ${chalk.magenta(port)}`);
-    logger.info(`database server: name: ${chalk.magenta(name)}`);
-    logger.info(`database server: models: %o`, models);
+    logger.info(`database server: host: ${chalk.magenta(host)}:${chalk.magenta(port)}`);
+    logger.info(`database server: name: ${chalk.magenta(name)}, models: %o`, models);
 };
 
 mongoose.set("debug", currentEnv === "development");
@@ -60,35 +58,35 @@ mongoose.connect(mongoURL, mongoOptions, connectCallback);
 const db = mongoose.connection;
 
 db.on("connecting", () => {
-    logger.info("database server: connecting...🟨");
+    logger.info("database server: connecting...");
 });
 
 db.on("connected", () => {
-    logger.info("database server: connected...🟩");
+    logger.info("database server: connected...");
 });
 
 db.on("open", () => {
-    logger.info("database server: open...🟩");
+    logger.info("database server: open...");
 });
 
 db.on("disconnected", () => {
-    logger.error("database server: disconnected...🟥");
+    logger.error("database server: disconnected...");
 });
 
 db.on("error", () => {
-    logger.info("database server: error...🟥");
+    logger.info("database server: error...");
 });
 
 db.on("close", () => {
-    logger.error("database server: closed...🟥");
+    logger.error("database server: closed...");
 });
 
 db.on("reconnected", () => {
-    logger.info("database server: reconnectiond...🟩");
+    logger.info("database server: reconnected...");
 });
 
 db.on("reconnectFailed", () => {
-    logger.info("database server: reconnection failed...🟥");
+    logger.info("database server: reconnection failed...");
 });
 
 process.on("SIGINT", () => {

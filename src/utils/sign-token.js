@@ -8,6 +8,8 @@ const { accessTokenSecret, refreshTokenSecret } = getCurrentJWTSecret();
 const signAccessToken = async (user) => {
     const payload = {
         id: user.id,
+        name: user.name ?? `${user.firstname} ${user.lastname}`,
+        handle: user.handle ?? user.username,
         email: user.email,
         role: user.role,
         type: "access",
@@ -26,6 +28,8 @@ const signAccessToken = async (user) => {
 const signRefreshToken = async (user) => {
     const payload = {
         id: user.id,
+        name: user.name ?? `${user.firstname} ${user.lastname}`,
+        handle: user.handle ?? user.username,
         email: user.email,
         role: user.role,
         type: "refresh",
@@ -44,6 +48,7 @@ const signRefreshToken = async (user) => {
 
 const verifyRefreshToken = async (refreshToken) => {
     const decoded = await JWT.verify(refreshToken, refreshTokenSecret);
+    
     if (decoded.type !== "refresh") throw new CustomError("Token Error", 400, "invalid_field", { message: "Invalid token type" });
 
     const result = await client.GET(`refresh:${decoded.id}`);

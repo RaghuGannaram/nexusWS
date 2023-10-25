@@ -18,16 +18,16 @@ const createUser = async function (user) {
     const accessToken = await signAccessToken(formattedResponse);
     const refreshToken = await signRefreshToken(formattedResponse);
 
-    return { data: formattedResponse, accessToken, refreshToken };
+    return { data: response, accessToken, refreshToken };
 };
 
 const validateUser = async function (email, password) {
     const user = await User.findOne({ email: email });
-    if (!user) throw new CustomError("Unauthorized", 401, "AUTHENTICATION_ERROR", "username or password not valid");
+    if (!user) throw new CustomError("Unauthorized", 401, "AUTHENTICATION_ERROR", "username or password not valid.");
 
     const valid = await bcrypt.compare(password, user.password);
 
-    if (!valid) throw new CustomError("Unauthorized", 401, "AUTHENTICATION_ERROR", "username or password not valid");
+    if (!valid) throw new CustomError("Unauthorized", 401, "AUTHENTICATION_ERROR", "username or password not valid.");
 
     user._doc.id = user._id.toString();
     const formattedResponse = hideSensitiveInfo(user._doc, "password", "updatedAt", "__v", "_id");

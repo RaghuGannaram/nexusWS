@@ -12,18 +12,32 @@ const port = getCurrentPort();
 server.listen(port);
 
 server.on("error", (error) => {
-    console.log("Error on node.js ...!", error);
+    logger.error("application server: error... %o", error);
 
-    if (error.syscall !== "listen") throw error;
+    if (error.syscall !== "listen") {
+        throw error;
+    }
 
     switch (error.code) {
         case "EACCES":
-            console.error("Requires elevated privileges.");
+            logger.error("application server: Requires elevated privileges.");
             process.exit(1);
+            break;
 
         case "EADDRINUSE":
-            console.error(port + " is already in use.");
+            logger.error(`application server: ${port} is already in use.`);
             process.exit(1);
+            break;
+
+        case "EADDRNOTAVAIL":
+            logger.error("application server: The specified IP address is not available on this machine.");
+            process.exit(1);
+            break;
+
+        case "ECONNREFUSED":
+            logger.error("application server: The server you're trying to connect to is not accepting connections.");
+            process.exit(1);
+            break;
 
         default:
             throw error;
@@ -31,21 +45,41 @@ server.on("error", (error) => {
 });
 
 server.on("listening", () => {
-    const { address, port, family } = server.address();
+    const { address, port } = server.address();
 
     logger.info("application server: up and running...🚀");
-    logger.info(`application server: address: ${chalk.magenta(address)}`);
-    logger.info(`application server: port: ${chalk.magenta(port)}`);
-    logger.info(`application server: family: ${chalk.magenta(family)}`);
+    logger.info(`application server: host: ${chalk.magenta(address)}:${chalk.magenta(port)}`);
 });
 
+server.on("upgrade", () => {
+    logger.info("application server: upgraded...");
+})
+
 server.on("disconnect", () => {
-    logger.error("application server: disconnecting...🟥");
+    logger.error("application server: disconnecting...");
 });
 
 server.on("close", () => {
-    logger.error("application server: closed...🟥");
+    logger.error("application server: closed...");
 });
+
+server.on("error", () => {
+    logger.error("application server: error...");
+})
+
+server.on("clientError", () => {
+    logger.error("application server: client error...");
+})
+
+process.on("uncaughtException", () => {
+    logger.error("application server: uncaught exception...");
+});
+
+// process.on("unhandledRejection", (reason, promise) => {
+//     logger.error("application server: unhandled rejection... " + reason + promise);
+//     logger.error("application server: reason : %s", reason);
+//     logger.error("application server: promise : %o", promise);
+// });
 
 process.on("SIGINT", () => {
     logger.error("application server: connection terminated...🟥");

@@ -49,20 +49,29 @@ function customErrorHandler(err, req, res, next) {
         err.status = 401;
         if (err.message === "jwt malformed") {
             err.message = "Unauthorized";
-            err.type = "JWT_MALFORMED";
+            err.type = "INVALID_TOKEN_FORMAT";
             err.description = "Invalid token format.";
         } else if (err.message === "invalid signature") {
             err.message = "Unauthorized";
-            err.type = "INVALID_SIGNATURE";
+            err.type = "INVALID_TOKEN_SIGNATURE";
             err.description = "Invalid token signature.";
-        } else if (err.message === "jwt expired") {
+        } else {
+            err.message = "Unauthorized";
+            err.type = "INVALID_TOKEN";
+            err.description = "Invalid or expired token.";
+        }
+    }
+
+    if (err.name === "TokenExpiredError") {
+        err.status = 401;
+        if (err.message === "jwt expired") {
             err.message = "Unauthorized";
             err.type = "TOKEN_EXPIRED";
             err.description = "Token has expired. Please log in again.";
         } else if (err.message === "jwt not active") {
             err.message = "Unauthorized";
             err.type = "TOKEN_NOT_ACTIVE";
-            err.description = "jwt not active";
+            err.description = "Token not active.";
         } else {
             err.message = "Unauthorized";
             err.type = "INVALID_TOKEN";

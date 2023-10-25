@@ -16,7 +16,7 @@ const client = createClient({
 client.connect()
 
 client.on("connect", () => {
-    logger.info("cache server: connecting...🟨");
+    logger.info("cache server: connecting...");
 });
 
 client.on("ready", () => {
@@ -28,11 +28,11 @@ client.on("error", (err) => {
 });
 
 client.on("reconnecting", () => {
-    logger.warn("cache server: reconnecting...🟨");
+    logger.warn("cache server: reconnecting...");
 });
 
 client.on("end", () => {
-    logger.warn("cache server: ended...🟥");
+    logger.warn("cache server: ended...");
 });
 
 process.on("SIGINT", () => {

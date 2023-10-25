@@ -1,0 +1,53 @@
+require('module-alias/register');
+
+const http = require("http");
+const chalk = require("chalk");
+const app = require("@/src/app");
+const logger = require("@/src/configs/logger.config");
+const { getCurrentPort } = require("@/src/utils/env-info");
+
+const server = http.createServer(app);
+const port = getCurrentPort();
+
+server.listen(port);
+
+server.on("error", (error) => {
+    console.log("Error on node.js ...!", error);
+
+    if (error.syscall !== "listen") throw error;
+
+    switch (error.code) {
+        case "EACCES":
+            console.error("Requires elevated privileges.");
+            process.exit(1);
+
+        case "EADDRINUSE":
+            console.error(port + " is already in use.");
+            process.exit(1);
+
+        default:
+            throw error;
+    }
+});
+
+server.on("listening", () => {
+    const { address, port, family } = server.address();
+
+    logger.info("application server: up and running...🚀");
+    logger.info(`application server: address: ${chalk.magenta(address)}`);
+    logger.info(`application server: port: ${chalk.magenta(port)}`);
+    logger.info(`application server: family: ${chalk.magenta(family)}`);
+});
+
+server.on("disconnect", () => {
+    logger.error("application server: disconnecting...🟥");
+});
+
+server.on("close", () => {
+    logger.error("application server: closed...🟥");
+});
+
+process.on("SIGINT", () => {
+    logger.error("application server: connection terminated...🟥");
+    server.close();
+});

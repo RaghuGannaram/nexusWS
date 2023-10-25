@@ -1,0 +1,60 @@
+const JWT = require("jsonwebtoken");
+const client = require("@/src/configs/cache.config");
+const { getCurrentJWTSecret } = require("@/src/utils/env-info");
+const CustomError = require("@/src/utils/custom-error");
+
+const { accessTokenSecret, refreshTokenSecret } = getCurrentJWTSecret();
+
+const signAccessToken = async (user) => {
+    const payload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        type: "access",
+    };
+    const options = {
+        expiresIn: "1h",
+        issuer: "nexus.raghugannaram.com",
+        audience: user.id,
+    };
+
+    const token = JWT.sign(payload, accessTokenSecret, options);
+    await client.SET(`access:${user.id}`, token, { EX: 60 * 60 });
+    return token;
+}
+
+const signRefreshToken = async (user) => {
+    const payload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        type: "refresh",
+    };
+    const options = {
+        expiresIn: "1y",
+        issuer: "nexus.raghugannaram.com",
+        audience: user.id,
+    };
+
+    const token = await JWT.sign(payload, refreshTokenSecret, options);
+    await client.SET(`refresh:${user.id}`, token, { EX: 365 * 24 * 60 * 60 });
+
+    return token;
+}
+
+const verifyRefreshToken = async (refreshToken) => {
+    const decoded = await JWT.verify(refreshToken, refreshTokenSecret);
+    if (decoded.type !== "refresh") throw new CustomError("Token Error", 400, "invalid_field", { message: "Invalid token type" });
+
+    const result = await client.GET(`refresh:${decoded.id}`);
+
+    if (refreshToken !== result) throw new CustomError("Token Error", 401, "invalid_data", { message: "Invalid refresh token" });
+
+    return decoded;
+}
+
+module.exports = {
+    signAccessToken,
+    signRefreshToken,
+    verifyRefreshToken
+}

@@ -10,7 +10,7 @@ const register = catchAsyncError(async function (req, res) {
 
     res.status(201).json({
         message: "User registered successfully..!",
-        user: data,
+        profile: data,
         accessToken,
         refreshToken,
     });
@@ -23,7 +23,7 @@ const login = catchAsyncError(async function (req, res) {
 
     res.status(200).json({
         message: "User logged in successfully..!",
-        user: data,
+        profile: data,
         accessToken,
         refreshToken,
     });

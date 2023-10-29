@@ -8,8 +8,8 @@ Content-Type: application/json
 {   
     "firstname": "Test",
     "lastname": "Test",
-    "username": "test2",
-    "email": "test2@gmail.com",
+    "username": "test5",
+    "email": "test5@gmail.com",
     "password": "1234"
 }
 
@@ -120,11 +120,9 @@ Content-Type: application/json
 DELETE http://localhost:5000/api/v1/post/comment/6538ff5bb657164e60279fcf/653953ca7036d94a685f7c8e HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Mzc3YjE3OWZiMzQzMDlhYzY0N2Y3YiIsIm5hbWUiOiJUb255IFN0YXJrIiwiaGFuZGxlIjoidG9ueSIsImVtYWlsIjoidG9ueXN0YXJrQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTY5ODI1NDY1NSwiZXhwIjoxNjk4MjU4MjU1LCJhdWQiOiI2NTM3N2IxNzlmYjM0MzA5YWM2NDdmN2IiLCJpc3MiOiJuZXh1cy5yYWdodWdhbm5hcmFtLmNvbSJ9.f_ad89MGi0cFYWRcZouxzdtazScc9w63KWGUbrbipGo
 
-
 ### like post
 PUT http://localhost:5000/api/v1/post/like/6538ff99b657164e60279fd2
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1Mzc3YWQwOWZiMzQzMDlhYzY0N2Y3NSIsIm5hbWUiOiJTdGV2ZSBSb2dlciIsImhhbmRsZSI6InN0ZXZlIiwiZW1haWwiOiJzdGV2ZXJvZ2VyQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTY5ODI1ODM5OCwiZXhwIjoxNjk4MjYxOTk4LCJhdWQiOiI2NTM3N2FkMDlmYjM0MzA5YWM2NDdmNzUiLCJpc3MiOiJuZXh1cy5yYWdodWdhbm5hcmFtLmNvbSJ9.Wb7iLGlqlm_ECG5o4hxGOtzE5NA3x1E0OtV0zMfoFXo
-
 
 ### like comment
 PUT http://localhost:5000/api/v1/post/comment-like/6538ff5bb657164e60279fcf/653953ec7036d94a685f7c91

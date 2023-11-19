@@ -3,7 +3,7 @@ const Joi = require("joi");
 const registrationSchema = Joi.object({
     firstname: Joi.string().alphanum().min(3).max(20).required().messages({
         "string.base": "First name should be a string",
-        "string.empty": "First name is required",
+        "string.empty": "First name should not be empty",
         "string.alphanum": "First name should only contain alphanumeric characters",
         "string.min": "First name length must be at least {#limit} characters",
         "string.max": "First name length must be at most {#limit} characters",
@@ -12,7 +12,7 @@ const registrationSchema = Joi.object({
 
     lastname: Joi.string().alphanum().min(3).max(20).required().messages({
         "string.base": "Last name should be a string",
-        "string.empty": "Last name is required",
+        "string.empty": "Last name should not be empty",
         "string.alphanum": "Last name should only contain alphanumeric characters",
         "string.min": "Last name length must be at least {#limit} characters",
         "string.max": "Last name length must be at most {#limit} characters",
@@ -21,7 +21,7 @@ const registrationSchema = Joi.object({
 
     username: Joi.string().alphanum().min(3).max(20).required().messages({
         "string.base": "Username should be a string",
-        "string.empty": "Username is required",
+        "string.empty": "Username should not be empty",
         "string.alphanum": "Username should only contain alphanumeric characters",
         "string.min": "Username length must be at least {#limit} characters",
         "string.max": "Username length must be at most {#limit} characters",
@@ -36,7 +36,7 @@ const registrationSchema = Joi.object({
         .required()
         .messages({
             "string.base": "Email should be a valid email address",
-            "string.empty": "Email is required",
+            "string.empty": "Email should not be empty",
             "string.email": "Email should be a valid email address",
             "string.min": "Email length must be at least {#limit} characters",
             "string.max": "Email length must be at most {#limit} characters",
@@ -45,7 +45,7 @@ const registrationSchema = Joi.object({
 
     password: Joi.string().min(4).max(20).required().messages({
         "string.base": "Password should be a string",
-        "string.empty": "Password is required",
+        "string.empty": "Password should not be empty",
         "string.min": "Password length must be at least {#limit} characters",
         "string.max": "Password length must be at most {#limit} characters",
         "any.required": "Password is required",
@@ -61,7 +61,7 @@ const loginSchema = Joi.object({
         .required()
         .messages({
             "string.base": "Email should be a valid email address",
-            "string.empty": "Email is required",
+            "string.empty": "Email should not be empty",
             "string.email": "Email should be a valid email address",
             "string.min": "Email length must be at least {#limit} characters",
             "string.max": "Email length must be at most {#limit} characters",
@@ -70,7 +70,7 @@ const loginSchema = Joi.object({
 
     password: Joi.string().min(4).max(20).required().messages({
         "string.base": "Password should be a string",
-        "string.empty": "Password is required",
+        "string.empty": "Password should not be empty",
         "string.min": "Password length must be at least {#limit} characters",
         "string.max": "Password length must be at most {#limit} characters",
         "any.required": "Password is required",

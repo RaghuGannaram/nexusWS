@@ -27,7 +27,7 @@ const updateUser = catchAsyncError(async function (req, res, next) {
 
     const user = req.user;
     const file = req.file;
-    const updatedUser = await userService.updateUser(user, userId, updatedData, file);
+    const updatedUser = await userService.updateUser(userId, updatedData, user, file);
 
     res.status(200).json({ user: updatedUser });
 });

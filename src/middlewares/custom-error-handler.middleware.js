@@ -29,7 +29,7 @@ function customErrorHandler(err, req, res, next) {
             err.description = "Duplicate key error: unique constraint violated.";
         } else if (err.type === 12500) {
             err.status = 500;
-            err.message = "Internal database error";
+            err.message = "Internal Server Error";
             err.type = "DB_EXECUTION_INTERRUPTED";
             err.description = "Database execution interrupted.";
         } else if (err.type === 12000) {
@@ -39,7 +39,7 @@ function customErrorHandler(err, req, res, next) {
             err.description = "MongoDB write operation failed.";
         } else {
             err.status = 500;
-            err.message = "Internal database error";
+            err.message = "Internal Server Error";
             err.type = "INTERNAL_DATABASE_ERROR";
             err.description = "Internal database error.";
         }
@@ -91,21 +91,21 @@ function customErrorHandler(err, req, res, next) {
     err.type = err.type ?? "INTERNAL_SERVER_ERROR";
     err.description = err.description ?? "Internal server error.";
 
-    if (currentEnv === "production") {
+    if (currentEnv === "development") {
         res.status(err.status).json({
             status: err.status,
-            message: err.message
+            message: err.message,
+            type: err.type,
+            description: err.description,
+            ...err,
+            stack: err.stack,
         });
         return;
     }
 
     res.status(err.status).json({
         status: err.status,
-        message: err.message,
-        type: err.type,
-        description: err.description,
-        ...err,
-        stack: err.stack
+        message: err.type,
     });
 }
 

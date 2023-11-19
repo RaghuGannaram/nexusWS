@@ -103,7 +103,8 @@ const likePost = catchAsyncError(async (req, res) => {
 
 const likeComment = catchAsyncError(async (req, res) => {
     const { postId, commentId } = req.params;
-    if (!postId || !commentId) throw new CustomError("Bad Request", 400, "VALIDATION_ERROR", "postId or commentId not provided.");
+    if (!postId || !commentId)
+        throw new CustomError("Bad Request", 400, "VALIDATION_ERROR", "postId or commentId not provided.");
 
     const user = req.user;
     const response = await postService.likeComment(user.id, postId, commentId);
@@ -127,7 +128,6 @@ const getPersonalPosts = catchAsyncError(async (req, res) => {
 
     res.status(200).json({ posts: posts });
 });
-
 
 module.exports = {
     getAllPosts,

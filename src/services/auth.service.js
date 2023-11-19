@@ -18,7 +18,7 @@ const createUser = async function (user) {
     const accessToken = await signAccessToken(formattedResponse);
     const refreshToken = await signRefreshToken(formattedResponse);
 
-    return { data: response, accessToken, refreshToken };
+    return { data: formattedResponse, accessToken, refreshToken };
 };
 
 const validateUser = async function (email, password) {

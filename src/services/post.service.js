@@ -8,7 +8,7 @@ const getAllPosts = async function () {
 
     return posts.map((post) => {
         post._doc.id = post._id.toString();
-        return hideSensitiveInfo(post._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(post._doc, "comments", "updatedAt", "__v", "_id");
     });
 };
 
@@ -18,9 +18,9 @@ const getPost = async function (postId) {
     post._doc.id = post._id.toString();
     post._doc.comments = post.comments.map((comment) => {
         comment._doc.id = comment._id.toString();
-        return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(comment._doc, "updatedAt", "__v", "_id");
     });
-    return hideSensitiveInfo(post._doc, "createdAt", "updatedAt", "__v", "_id");
+    return hideSensitiveInfo(post._doc, "updatedAt", "__v", "_id");
 };
 
 const addPost = async function (user, post) {
@@ -34,12 +34,12 @@ const addPost = async function (user, post) {
     const savedPost = await newPost.save();
 
     savedPost._doc.id = savedPost._id.toString();
-    return hideSensitiveInfo(savedPost._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
+    return hideSensitiveInfo(savedPost._doc, "comments", "updatedAt", "__v", "_id");
 };
 
 const updatePost = async function (user, postId, updatedData) {
     const post = await Post.findById(postId);
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     if (user.role !== "admin" && user.id !== post.author.id)
         throw new CustomError(
@@ -52,13 +52,13 @@ const updatePost = async function (user, postId, updatedData) {
     const updatedPost = await Post.findByIdAndUpdate(postId, { $set: { ...updatedData } }, { new: true });
 
     updatedPost._doc.id = updatedPost._id.toString();
-    return hideSensitiveInfo(updatedPost._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
+    return hideSensitiveInfo(updatedPost._doc, "comments", "updatedAt", "__v", "_id");
 };
 
 const deletePost = async function (user, postId) {
     const post = await Post.findById(postId);
 
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     if (user.role !== "admin" && user.id !== post.author.id)
         throw new CustomError(
@@ -68,7 +68,7 @@ const deletePost = async function (user, postId) {
             "You are not authorized to perform this action."
         );
 
-    await await Post.deleteOne({ _id: postId });
+    await await Post.findByIdAndDelete(postId);
 
     return `Deleted post ${postId}`;
 };
@@ -79,13 +79,13 @@ const getComments = async function (postId) {
     const { comments } = post._doc;
     return comments.map((comment) => {
         comment._doc.id = comment._id.toString();
-        return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(comment._doc, "updatedAt", "__v", "_id");
     });
 };
 
 const addComment = async function (user, postId, comment) {
     const post = await Post.findById(postId);
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     comment.author = {
         id: user.id,
@@ -97,16 +97,16 @@ const addComment = async function (user, postId, comment) {
     const { comments } = updatedPost._doc;
     return comments.map((comment) => {
         comment._doc.id = comment._id.toString();
-        return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(comment._doc, "updatedAt", "__v", "_id");
     });
 };
 
 const updateComment = async function (user, postId, commentId, updatedData) {
     const post = await Post.findById(postId);
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     const comment = post.comments.find((comment) => comment.id === commentId);
-    if (!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
+    if (!comment) throw new CustomError("Not Found", 404, "COMMENT_NOT_FOUND", "Comment not found.");
 
     if (user.role !== "admin" && user.id !== comment.author.id)
         throw new CustomError(
@@ -125,16 +125,16 @@ const updateComment = async function (user, postId, commentId, updatedData) {
     const { comments } = updatedPost._doc;
     return comments.map((comment) => {
         comment._doc.id = comment._id.toString();
-        return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(comment._doc, "updatedAt", "__v", "_id");
     });
 };
 
 const deleteComment = async function (user, postId, commentId) {
     const post = await Post.findById(postId);
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     const comment = post.comments.find((comment) => comment.id === commentId);
-    if (!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
+    if (!comment) throw new CustomError("Not Found", 404, "COMMENT_NOT_FOUND", "Comment not found.");
 
     if (user.role !== "admin" && user.id !== comment.author.id)
         throw new CustomError(
@@ -153,13 +153,13 @@ const deleteComment = async function (user, postId, commentId) {
     const { comments } = updatedPost._doc;
     return comments.map((comment) => {
         comment._doc.id = comment._id.toString();
-        return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(comment._doc, "updatedAt", "__v", "_id");
     });
 };
 
 const likePost = async function (userId, postId) {
     const post = await Post.findById(postId);
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     if (!post.likes.includes(userId)) {
         await post.updateOne({ $push: { likes: userId } });
@@ -173,10 +173,10 @@ const likePost = async function (userId, postId) {
 const likeComment = async function (userId, postId, commentId) {
     const post = await Post.findById(postId);
 
-    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "POST_NOT_FOUND", "Post not found.");
 
     const comment = post.comments.find((comment) => comment.id === commentId);
-    if (!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
+    if (!comment) throw new CustomError("Not Found", 404, "COMMENT_NOT_FOUND", "Comment not found.");
 
     if (!comment.likes.includes(userId)) {
         await Post.findOneAndUpdate(
@@ -209,7 +209,7 @@ const getTimelinePosts = async function (userId) {
 
     return posts.map((post) => {
         post._doc.id = post._id.toString();
-        return hideSensitiveInfo(post._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(post._doc, "comments", "updatedAt", "__v", "_id");
     });
 };
 
@@ -218,7 +218,7 @@ const getPersonalPosts = async function (userId) {
 
     return posts.map((post) => {
         post._doc.id = post._id.toString();
-        return hideSensitiveInfo(post._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
+        return hideSensitiveInfo(post._doc, "comments", "updatedAt", "__v", "_id");
     });
 };
 

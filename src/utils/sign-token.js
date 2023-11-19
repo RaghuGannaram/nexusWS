@@ -50,12 +50,11 @@ const verifyRefreshToken = async (refreshToken) => {
     const decoded = JWT.verify(refreshToken, refreshTokenSecret);
 
     if (decoded.type !== "refresh")
-        throw new CustomError("Token Error", 400, "invalid_field", { message: "Invalid token type" });
+        throw new CustomError("Bad Request", 400, "INVALID_TOKEN_TYPE", "Invalid token type");
 
     const result = await client.GET(`refresh:${decoded.id}`);
 
-    if (refreshToken !== result)
-        throw new CustomError("Token Error", 401, "invalid_data", { message: "Invalid refresh token" });
+    if (refreshToken !== result) throw new CustomError("Unauthorized", 401, "INVALID_TOKEN", "Invalid refresh token");
 
     return decoded;
 };

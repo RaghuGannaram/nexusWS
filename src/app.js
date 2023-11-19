@@ -10,10 +10,7 @@ require("@/src/configs/db.config");
 
 const morganMiddleware = require("@/src/middlewares/morgan.middleware");
 const customErrorHandler = require("@/src/middlewares/custom-error-handler.middleware");
-
-const authRouter = require("@/src/routes/auth.route");
-const userRouter = require("@/src/routes/user.route");
-const postRouter = require("@/src/routes/post.route");
+const api_v1 = require("@/src/api/v1");
 
 const app = express();
 
@@ -28,9 +25,7 @@ app.use("/health-check",  (req, res,) => {
     res.status(200).json({ message: "OK" });
 });
 
-app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/user", userRouter);
-app.use("/api/v1/post", postRouter);
+app.use("/api/v1", api_v1);
 
 app.use(function (req, res, next) {
     next(createError(404));

@@ -41,7 +41,7 @@ const mongoOptions = dbConfig[process.env.NODE_ENV];
 
 const connectCallback = function (err, data) {
     if (err) {
-        console.log("Unable to connect to Database...🙁");
+        logger.error("database server: Unable to connect to Database...🙁");
         throw err;
     }
 
@@ -74,7 +74,7 @@ db.on("disconnected", () => {
 });
 
 db.on("error", () => {
-    logger.info("database server: error...");
+    logger.error("database server: error...");
 });
 
 db.on("close", () => {
@@ -86,7 +86,7 @@ db.on("reconnected", () => {
 });
 
 db.on("reconnectFailed", () => {
-    logger.info("database server: reconnection failed...");
+    logger.error("database server: reconnection failed...");
 });
 
 process.on("SIGINT", () => {

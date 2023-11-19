@@ -71,8 +71,9 @@ server.on("clientError", () => {
     logger.error("application server: client error...");
 })
 
-process.on("uncaughtException", () => {
-    logger.error("application server: uncaught exception...");
+process.on("uncaughtException", (err) => {
+    logger.error("application server: uncaught exception... \n %s", err.message);
+    process.exit(1);
 });
 
 // process.on("unhandledRejection", (reason, promise) => {

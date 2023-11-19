@@ -36,7 +36,8 @@ const updateBackgroundImage = catchAsyncError(async (req, res) => {
     const { userId } = req.params;
     const { updatedData } = req.body;
 
-    if (!userId || !updatedData) throw new CustomError("Bad Request", 400, "VALIDATION_ERROR", "userId or updatedData not provided.");
+    if (!userId || !updatedData)
+        throw new CustomError("Bad Request", 400, "VALIDATION_ERROR", "userId or updatedData not provided.");
 
     const user = req.user;
     const file = req.file;
@@ -71,5 +72,5 @@ module.exports = {
     updateUser,
     updateBackgroundImage,
     followUser,
-    deleteUser
+    deleteUser,
 };

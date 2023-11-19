@@ -1,4 +1,4 @@
-require('module-alias/register');
+require("module-alias/register");
 
 const http = require("http");
 const chalk = require("chalk");
@@ -53,7 +53,7 @@ server.on("listening", () => {
 
 server.on("upgrade", () => {
     logger.info("application server: upgraded...");
-})
+});
 
 server.on("disconnect", () => {
     logger.error("application server: disconnecting...");
@@ -63,13 +63,9 @@ server.on("close", () => {
     logger.error("application server: closed...");
 });
 
-server.on("error", () => {
-    logger.error("application server: error...");
-})
-
 server.on("clientError", () => {
     logger.error("application server: client error...");
-})
+});
 
 process.on("uncaughtException", (err) => {
     logger.error("application server: uncaught exception... \n %s", err.message);

@@ -11,16 +11,19 @@ const verifyAccessToken = catchAsyncError(async (req, res, next) => {
 
     if (!token) throw new CustomError("Unauthorized", 401, "TOKEN_NOT_FOUND", "Access token not provided");
 
-    if (!token.startsWith("Bearer ")) throw new CustomError("Unauthorized", 401, "INVALID_TOKEN_SCHEME", "Invalid authorization scheme.");
+    if (!token.startsWith("Bearer "))
+        throw new CustomError("Unauthorized", 401, "INVALID_TOKEN_SCHEME", "Invalid authorization scheme.");
 
     token = token.slice(7);
 
-    const decoded = await JWT.verify(token, accessTokenSecret);
+    const decoded = JWT.verify(token, accessTokenSecret);
 
-    if (decoded.type !== "access") throw new CustomError("Unauthorized", 401, "INVALID_TOKEN_TYPE", "Invalid token type.");
+    if (decoded.type !== "access")
+        throw new CustomError("Unauthorized", 401, "INVALID_TOKEN_TYPE", "Invalid token type.");
 
     const validAccessToken = await client.GET(`access:${decoded.id}`);
-    if (token !== validAccessToken) throw new CustomError("Unauthorized", 401, "TOKEN_FLUSHED", "Token has been flushed, Please login again.");
+    if (token !== validAccessToken)
+        throw new CustomError("Unauthorized", 401, "TOKEN_FLUSHED", "Token has been flushed, Please login again.");
 
     req.user = {
         id: decoded.id,
@@ -28,11 +31,9 @@ const verifyAccessToken = catchAsyncError(async (req, res, next) => {
         handle: decoded.handle,
         email: decoded.email,
         role: decoded.role,
-    }
+    };
 
     next();
 });
-
-
 
 module.exports = verifyAccessToken;

@@ -13,7 +13,7 @@ const client = createClient({
     password,
 });
 
-client.connect()
+client.connect();
 
 client.on("connect", () => {
     logger.info("cache server: connecting...");

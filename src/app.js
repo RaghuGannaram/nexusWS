@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/health-check",  (req, res,) => {
+app.use("/health-check", (req, res) => {
     res.status(200).json({ message: "OK" });
 });
 

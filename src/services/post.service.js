@@ -33,7 +33,6 @@ const addPost = async function (user, post) {
 
     const savedPost = await newPost.save();
 
-    return savedPost;
     savedPost._doc.id = savedPost._id.toString();
     return hideSensitiveInfo(savedPost._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
 };
@@ -42,25 +41,37 @@ const updatePost = async function (user, postId, updatedData) {
     const post = await Post.findById(postId);
     if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
 
-    if (user.role !== "admin" && user.id !== post.author.id) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You are not authorized to perform this action.");
+    if (user.role !== "admin" && user.id !== post.author.id)
+        throw new CustomError(
+            "Forbidden",
+            403,
+            "AUTHORIZATION_ERROR",
+            "You are not authorized to perform this action."
+        );
 
     const updatedPost = await Post.findByIdAndUpdate(postId, { $set: { ...updatedData } }, { new: true });
 
     updatedPost._doc.id = updatedPost._id.toString();
     return hideSensitiveInfo(updatedPost._doc, "comments", "createdAt", "updatedAt", "__v", "_id");
-}
+};
 
 const deletePost = async function (user, postId) {
     const post = await Post.findById(postId);
 
     if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
 
-    if (user.role !== "admin" && user.id !== post.author.id) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You are not authorized to perform this action.");
+    if (user.role !== "admin" && user.id !== post.author.id)
+        throw new CustomError(
+            "Forbidden",
+            403,
+            "AUTHORIZATION_ERROR",
+            "You are not authorized to perform this action."
+        );
 
     await await Post.deleteOne({ _id: postId });
 
     return `Deleted post ${postId}`;
-}
+};
 
 const getComments = async function (postId) {
     const post = await Post.findById(postId);
@@ -88,7 +99,7 @@ const addComment = async function (user, postId, comment) {
         comment._doc.id = comment._id.toString();
         return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
     });
-}
+};
 
 const updateComment = async function (user, postId, commentId, updatedData) {
     const post = await Post.findById(postId);
@@ -97,16 +108,26 @@ const updateComment = async function (user, postId, commentId, updatedData) {
     const comment = post.comments.find((comment) => comment.id === commentId);
     if (!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
 
-    if (user.role !== "admin" && user.id !== comment.author.id) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You are not authorized to perform this action.");
+    if (user.role !== "admin" && user.id !== comment.author.id)
+        throw new CustomError(
+            "Forbidden",
+            403,
+            "AUTHORIZATION_ERROR",
+            "You are not authorized to perform this action."
+        );
 
-    const updatedPost = await Post.findByIdAndUpdate(postId, { $set: { "comments.$[comment].description": updatedData.description } }, { arrayFilters: [{ "comment._id": commentId }], new: true });
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $set: { "comments.$[comment].description": updatedData.description } },
+        { arrayFilters: [{ "comment._id": commentId }], new: true }
+    );
 
     const { comments } = updatedPost._doc;
     return comments.map((comment) => {
         comment._doc.id = comment._id.toString();
         return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
     });
-}
+};
 
 const deleteComment = async function (user, postId, commentId) {
     const post = await Post.findById(postId);
@@ -115,20 +136,30 @@ const deleteComment = async function (user, postId, commentId) {
     const comment = post.comments.find((comment) => comment.id === commentId);
     if (!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
 
-    if (user.role !== "admin" && user.id !== comment.author.id) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You are not authorized to perform this action.");
+    if (user.role !== "admin" && user.id !== comment.author.id)
+        throw new CustomError(
+            "Forbidden",
+            403,
+            "AUTHORIZATION_ERROR",
+            "You are not authorized to perform this action."
+        );
 
-    const updatedPost = await Post.findByIdAndUpdate(postId, { $pull: { comments: { _id: commentId } } }, { new: true });
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        { $pull: { comments: { _id: commentId } } },
+        { new: true }
+    );
 
     const { comments } = updatedPost._doc;
     return comments.map((comment) => {
         comment._doc.id = comment._id.toString();
         return hideSensitiveInfo(comment._doc, "createdAt", "updatedAt", "__v", "_id");
     });
-}
+};
 
 const likePost = async function (userId, postId) {
     const post = await Post.findById(postId);
-    if(!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
 
     if (!post.likes.includes(userId)) {
         await post.updateOne({ $push: { likes: userId } });
@@ -137,26 +168,32 @@ const likePost = async function (userId, postId) {
         await post.updateOne({ $pull: { likes: userId } });
         return `Unliked post ${postId}`;
     }
-
-}
+};
 
 const likeComment = async function (userId, postId, commentId) {
     const post = await Post.findById(postId);
 
-    if(!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
+    if (!post) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Post not found.");
 
     const comment = post.comments.find((comment) => comment.id === commentId);
-    if(!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
+    if (!comment) throw new CustomError("Not Found", 404, "NOT_FOUND_ERROR", "Comment not found.");
 
     if (!comment.likes.includes(userId)) {
-        await Post.findOneAndUpdate({ _id: postId }, { $push: { "comments.$[comment].likes": userId } }, { arrayFilters: [{ "comment._id": commentId }] });
+        await Post.findOneAndUpdate(
+            { _id: postId },
+            { $push: { "comments.$[comment].likes": userId } },
+            { arrayFilters: [{ "comment._id": commentId }] }
+        );
         return `Liked comment ${commentId}`;
     } else {
-        await Post.findOneAndUpdate({ _id: postId }, { $pull: { "comments.$[comment].likes": userId } }, { arrayFilters: [{ "comment._id": commentId }] });
+        await Post.findOneAndUpdate(
+            { _id: postId },
+            { $pull: { "comments.$[comment].likes": userId } },
+            { arrayFilters: [{ "comment._id": commentId }] }
+        );
         return `Unliked comment ${commentId}`;
     }
-
-}
+};
 
 const getTimelinePosts = async function (userId) {
     const user = await User.findById(userId);

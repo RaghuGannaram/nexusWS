@@ -45,13 +45,13 @@ const refreshUserTokens = async function (refreshToken) {
     const newRefreshToken = await signRefreshToken(user);
 
     return { newAccessToken, newRefreshToken };
-}
+};
 
 const clearUserTokens = async function (refreshToken) {
     const user = await verifyRefreshToken(refreshToken);
 
     await client.DEL(`access:${user.id}`);
     await client.DEL(`refresh:${user.id}`);
-}
+};
 
 module.exports = { createUser, validateUser, refreshUserTokens, clearUserTokens };

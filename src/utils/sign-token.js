@@ -23,7 +23,7 @@ const signAccessToken = async (user) => {
     const token = JWT.sign(payload, accessTokenSecret, options);
     await client.SET(`access:${user.id}`, token, { EX: 60 * 60 });
     return token;
-}
+};
 
 const signRefreshToken = async (user) => {
     const payload = {
@@ -40,26 +40,28 @@ const signRefreshToken = async (user) => {
         audience: user.id,
     };
 
-    const token = await JWT.sign(payload, refreshTokenSecret, options);
+    const token = JWT.sign(payload, refreshTokenSecret, options);
     await client.SET(`refresh:${user.id}`, token, { EX: 365 * 24 * 60 * 60 });
 
     return token;
-}
+};
 
 const verifyRefreshToken = async (refreshToken) => {
-    const decoded = await JWT.verify(refreshToken, refreshTokenSecret);
-    
-    if (decoded.type !== "refresh") throw new CustomError("Token Error", 400, "invalid_field", { message: "Invalid token type" });
+    const decoded = JWT.verify(refreshToken, refreshTokenSecret);
+
+    if (decoded.type !== "refresh")
+        throw new CustomError("Token Error", 400, "invalid_field", { message: "Invalid token type" });
 
     const result = await client.GET(`refresh:${decoded.id}`);
 
-    if (refreshToken !== result) throw new CustomError("Token Error", 401, "invalid_data", { message: "Invalid refresh token" });
+    if (refreshToken !== result)
+        throw new CustomError("Token Error", 401, "invalid_data", { message: "Invalid refresh token" });
 
     return decoded;
-}
+};
 
 module.exports = {
     signAccessToken,
     signRefreshToken,
-    verifyRefreshToken
-}
+    verifyRefreshToken,
+};

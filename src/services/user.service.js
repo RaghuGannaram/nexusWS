@@ -22,7 +22,8 @@ const getUserByID = async function (id) {
 };
 
 const updateUser = async function (user, userId, updatedData, file) {
-    if (user.role !== "admin" && user.id !== userId) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You can update only your account!");
+    if (user.role !== "admin" && user.id !== userId)
+        throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You can update only your account!");
 
     Object.keys(updatedData).forEach((key) => updatedData[key] === "undefined" && delete updatedData[key]);
 
@@ -37,7 +38,8 @@ const updateUser = async function (user, userId, updatedData, file) {
 };
 
 const updateBackgroundImage = async function (user, userId, updatedData, file) {
-    if (user.role !== "admin" && user.id !== userId) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You can update only your account!");
+    if (user.role !== "admin" && user.id !== userId)
+        throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You can update only your account!");
 
     Object.keys(updatedData).forEach((key) => updatedData[key] === "undefined" && delete updatedData[key]);
     if (file) {
@@ -68,7 +70,8 @@ const followUser = async function (user, userId) {
 };
 
 const deleteUser = async function (user, userId) {
-    if (user.role !== "admin" && user.id !== userId) throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You can delete only your account!");
+    if (user.role !== "admin" && user.id !== userId)
+        throw new CustomError("Forbidden", 403, "AUTHORIZATION_ERROR", "You can delete only your account!");
 
     await User.findByIdAndDelete(userId);
 
@@ -77,7 +80,6 @@ const deleteUser = async function (user, userId) {
 
     return;
 };
-
 
 module.exports = {
     getAllUsers,

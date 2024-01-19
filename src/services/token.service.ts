@@ -1,10 +1,10 @@
 import JWT from "jsonwebtoken";
 import client from "@src/configs/cache.config";
-import { getCurrentJWTSecret } from "@src/utils/env-info";
+import { getJWTSecret } from "@src/utils/env-info";
 import { DataError, DataErrors, throwDataError, processTokenError } from "@src/utils/application-errors";
 import type { ITokenPayload } from "@src/types";
 
-const { accessTokenSecret, refreshTokenSecret } = getCurrentJWTSecret();
+const { accessTokenSecret, refreshTokenSecret } = getJWTSecret();
 
 export const issueAccessToken = async (user: ITokenPayload) => {
     try {

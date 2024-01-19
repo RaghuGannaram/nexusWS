@@ -1,31 +1,46 @@
 import type { Request, Response, NextFunction } from "express";
-import { getCurrentEnv } from "@src/utils/env-info";
+import { getCurrentEnv, getErrorExposureDepth } from "@src/utils/env-info";
 import logger from "@src/configs/logger.config";
+import { errorExposureDepthCode, type ApplicationError } from "@src/types/index";
 
-function customErrorHandler(err: any, req: Request, res: Response, _next: NextFunction) {
-    logger.error(`${req.method} ${req.originalUrl}: ${err.status} - ${err.message} - ${req.ip} \n%o`, err);
+const currentEnv = getCurrentEnv();
+const errorExposureDepth = errorExposureDepthCode[getErrorExposureDepth()];
 
-    const currentEnv = getCurrentEnv();
+function customErrorHandler(error: ApplicationError, req: Request, res: Response, _next: NextFunction) {
+    logger.error(`${req.method} ${req.originalUrl}: ${error.status} - ${error.message} - ${req.ip} \n%o`, error);
 
-    err.status = err.status ?? 500;
-    err.message = err.message ?? "INTERNAL_SERVER_ERROR";
-    err.type = err.type ?? "INTERNAL_SERVER_ERROR";
+    const appError = formatError(error, 1);
 
-    if (currentEnv === "development") {
-        res.status(err.status).json({
-            status: err.status,
-            message: err.message,
-            type: err.type,
-            ...err,
-            stack: err.stack,
-        });
-        return;
+    const { status, message, stack, ...rest } = appError;
+    const response: ApplicationError = {
+        status: status ?? 500,
+        message: error.message ?? "INTERNAL_SERVER_ERROR",
+        ...rest,
+    };
+
+    if (currentEnv === "development" && stack) {
+        response.stack = stack;
     }
 
-    res.status(err.status).json({
-        status: err.status,
-        message: err.type,
-    });
+    res.status(appError.status).json(response);
+}
+
+function formatError(error: ApplicationError, depth: number): ApplicationError {
+    const { cause, stack, ...rest } = error;
+
+    let currentError: ApplicationError;
+
+    if (depth >= errorExposureDepth) {
+        return { ...rest };
+    }
+
+    currentError = depth === 1 && stack ? { ...rest, stack: stack } : { ...rest };
+
+    if (cause) {
+        currentError.cause = cause instanceof Error ? formatError(cause as ApplicationError, depth + 1) : cause;
+    }
+
+    return currentError;
 }
 
 export default customErrorHandler;

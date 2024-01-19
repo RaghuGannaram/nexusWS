@@ -1,14 +1,14 @@
 import winston from "winston";
 import chalk from "chalk";
 import util from "util";
-import { getCurrentLogLevel } from "@src/utils/env-info";
+import { getLogLevel } from "@src/utils/env-info";
 import { colorCode } from "@src/types/index";
 
 const { addColors, createLogger, format, transports } = winston;
 
 addColors(colorCode);
 
-const level = getCurrentLogLevel();
+const level = getLogLevel();
 
 const consoleLogFormat = format.printf(({ level, message, timestamp, stack }) => {
     const colorizedTimestamp = chalk.gray(timestamp);

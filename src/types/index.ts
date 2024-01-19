@@ -34,6 +34,28 @@ export const levelCode: Record<LogLevel, number> = {
     silly: 6,
 };
 
+export enum ErrorExposureDepth {
+    HTTP = "HTTP",
+    BUSINESS = "BUSINESS",
+    DATA = "DATA",
+    DEFAULT = "DEFAULT",
+}
+
+export const errorExposureDepthCode: Record<ErrorExposureDepth, number> = {
+    HTTP: 1,
+    BUSINESS: 2,
+    DATA: 3,
+    DEFAULT: Number.MAX_SAFE_INTEGER,
+};
+
+export interface ApplicationError extends Error {
+    status: number;
+    message: string;
+    type: string;
+    cause?: ApplicationError | Error | null;
+    stack?: string;
+}
+
 export interface IRegistrationData {
     firstname: string;
     lastname: string;

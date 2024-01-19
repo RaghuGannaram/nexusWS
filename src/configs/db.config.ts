@@ -1,12 +1,12 @@
 import mongoose, { type Connection } from "mongoose";
 import chalk from "chalk";
-import { getCurrentDBUrl, getCurrentEnv } from "@src/utils/env-info";
+import { getDBUrl, getCurrentEnv } from "@src/utils/env-info";
 import logger from "@src/configs/logger.config";
 import { type ConnectOptions } from "mongoose";
 
 type Config = Record<ReturnType<typeof getCurrentEnv>, ConnectOptions>;
 
-const mongoURL = getCurrentDBUrl();
+const mongoURL = getDBUrl();
 const currentEnv = getCurrentEnv();
 
 const dbConfig: Config = {

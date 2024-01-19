@@ -1,8 +1,8 @@
 import { createClient } from "redis";
 import logger from "@src/configs/logger.config";
-import { getCurrentCacheParams } from "@src/utils/env-info";
+import { getCacheParams } from "@src/utils/env-info";
 
-const { host, port, username, password } = getCurrentCacheParams();
+const { host, port, username, password } = getCacheParams();
 
 const client = createClient({
     socket: {

@@ -1,14 +1,14 @@
-import express, { type Request, type Response, type NextFunction } from "express";
+import express, { type Request, type Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import createError from "http-errors";
 
 import "@src/configs/cache.config";
 import "@src/configs/db.config";
 
 import morganMiddleware from "@src/middlewares/morgan.middleware";
 import customErrorHandler from "@src/middlewares/custom-error-handler.middleware";
+import defaultMiddleware from "@src/middlewares/default.middleware";
 import api_v1 from "@src/api/v1";
 
 const app = express();
@@ -26,10 +26,7 @@ app.use("/health-check", (_req: Request, res: Response) => {
 
 app.use("/api/v1", api_v1);
 
-app.use(function (_req: Request, _res: Response, next: NextFunction) {
-    next(createError(404));
-});
-
+app.use(defaultMiddleware);
 app.use(customErrorHandler);
 
 export default app;

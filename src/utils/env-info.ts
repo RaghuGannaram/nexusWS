@@ -13,7 +13,7 @@ export function getLogLevel(): LogLevel {
 }
 
 export function getErrorExposureDepth(): ErrorExposureDepth {
-    return (process.env["ERROR_EXPOSURE_DEPTH"] as ErrorExposureDepth) || "DEFAULT";
+    return (process.env["ERROR_EXPOSURE_DEPTH"] as ErrorExposureDepth) || "BUSINESS";
 }
 
 export function getDBUrl(): string {

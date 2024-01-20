@@ -38,14 +38,14 @@ export enum ErrorExposureDepth {
     HTTP = "HTTP",
     BUSINESS = "BUSINESS",
     DATA = "DATA",
-    DEFAULT = "DEFAULT",
+    COMPLETE = "COMPLETE",
 }
 
 export const errorExposureDepthCode: Record<ErrorExposureDepth, number> = {
     HTTP: 1,
     BUSINESS: 2,
     DATA: 3,
-    DEFAULT: Number.MAX_SAFE_INTEGER,
+    COMPLETE: Number.MAX_SAFE_INTEGER,
 };
 
 export interface ApplicationError extends Error {

@@ -15,23 +15,23 @@ export enum LogLevel {
 }
 
 export const colorCode: Record<LogLevel, string> = {
-    error: "red",
-    warn: "yellow",
-    info: "green",
-    http: "magenta",
-    verbose: "cyan",
-    debug: "blue",
-    silly: "pink",
+    [LogLevel.ERROR]: "red",
+    [LogLevel.WARN]: "yellow",
+    [LogLevel.INFO]: "green",
+    [LogLevel.HTTP]: "magenta",
+    [LogLevel.VERBOSE]: "cyan",
+    [LogLevel.DEBUG]: "blue",
+    [LogLevel.SILLY]: "pink",
 };
 
 export const levelCode: Record<LogLevel, number> = {
-    error: 0,
-    warn: 1,
-    info: 2,
-    http: 3,
-    verbose: 4,
-    debug: 5,
-    silly: 6,
+    [LogLevel.ERROR]: 0,
+    [LogLevel.WARN]: 1,
+    [LogLevel.INFO]: 2,
+    [LogLevel.HTTP]: 3,
+    [LogLevel.VERBOSE]: 4,
+    [LogLevel.DEBUG]: 5,
+    [LogLevel.SILLY]: 6,
 };
 
 export enum ErrorExposureDepth {
@@ -42,10 +42,10 @@ export enum ErrorExposureDepth {
 }
 
 export const errorExposureDepthCode: Record<ErrorExposureDepth, number> = {
-    HTTP: 1,
-    BUSINESS: 2,
-    DATA: 3,
-    COMPLETE: Number.MAX_SAFE_INTEGER,
+    [ErrorExposureDepth.HTTP]: 1,
+    [ErrorExposureDepth.BUSINESS]: 2,
+    [ErrorExposureDepth.DATA]: 3,
+    [ErrorExposureDepth.COMPLETE]: Number.MAX_SAFE_INTEGER,
 };
 
 export interface ApplicationError extends Error {

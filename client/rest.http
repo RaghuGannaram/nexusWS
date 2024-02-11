@@ -1,5 +1,5 @@
 ### health check
-GET http://localhost:5000/heah-check HTTP/1.1
+GET http://localhost:5000/healt-check HTTP/1.1
 
 ### registration
 POST http://localhost:5000/api/v1/auth/register HTTP/1.1

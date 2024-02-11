@@ -33,8 +33,7 @@
         "jsonwebtoken",
         "dotenv",
         "cross-env",
-        "nodemon",
-        "typescript"
+        "nodemon"
     ],
     "homepage": "https://github.com/RaghuGannaram/nexusWS",
     "bugs": {

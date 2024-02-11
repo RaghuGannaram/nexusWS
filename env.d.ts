@@ -10,5 +10,6 @@ declare module NodeJS {
         ACCESS_TOKEN_SECRET: string;
         REFRESH_TOKEN_SECRET: string;
         LOG_LEVEL: string;
+        ERROR_EXPOSURE_DEPTH: string;
     }
 }
